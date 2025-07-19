@@ -13,14 +13,8 @@ from azure.ai.inference.models import (
     AssistantMessage,
     SystemMessage,
     UserMessage,
-    ToolMessage,
-    # ChatResponseMessage,
 )
-from azure.ai.inference.models import (
-    # ImageContentItem,
-    # ImageUrl,
-    TextContentItem,
-)
+from azure.ai.inference.models import TextContentItem
 from azure.core.credentials import AzureKeyCredential
 
 
@@ -40,7 +34,7 @@ client = ChatCompletionsClient(
 
 # Create your chain
 @track(name="foundry_poc")
-def llm_chain(input_text: str | None = None) -> str:
+def llm_chain(input_text: str) -> str:
     """
     Function to handle the LLM chain interaction.
     It retrieves context and generates a response based on the input text.
@@ -52,7 +46,7 @@ def llm_chain(input_text: str | None = None) -> str:
 
 
 @track
-def retrieve_context(input_text: str | None = None) -> List[str]:
+def retrieve_context(input_text: str) -> List[str]:
     """
     Function to retrieve context based on the input text.
     This is a placeholder function that simulates context retrieval.
@@ -88,27 +82,12 @@ def generate_response(input_text: str, context: List[str]):
         ),
     ]
 
-    while True:
-        response = client.complete(
-            messages=messages,
-            model="openai/gpt-4o-mini",
-            temperature=1,
-            top_p=1,
-        )
-
-        if response.choices[0].message.tool_calls:
-            print(response.choices[0].message.tool_calls)
-            # messages.append(response.choices[0].message)
-            for tool_call in response.choices[0].message.tool_calls:
-                messages.append(
-                    ToolMessage(
-                        content=locals()[tool_call.function.name](),
-                        tool_call_id=tool_call.id,
-                    )
-                )
-        else:
-            # print(response.choices[0].message.content)
-            break
+    response = client.complete(
+        messages=messages,
+        model="openai/gpt-4o-mini",
+        temperature=1,
+        top_p=1,
+    )
 
     return response.choices[0].message.content
 
