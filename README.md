@@ -1,15 +1,29 @@
-# Python Project Template
+# Comet Opik POC 1
 
-This is a template for a Python project. It is intended to be used as a starting point for creating a new project.
+This is a proof of concept for using [Comet Opik](https://docs.comet.com/llm/opik) for tracking LLM interactions.
 
-The project contains the following elements:
+## Scripts
 
-- VS Code workspace configuration (incl. recommended extensions).
-- VS Code development container configuration.
-- Pytest configuration.
-- Code formatter, type checker, and linter configuration.
-- Python security scanner configuration ([Bandit](https://github.com/PyCQA/bandit) and [Pylint Secure Coding Standard](https://github.com/Takishima/pylint-secure-coding-standard)).
+- `src/opik_and_openai.py`: Script for tracking LLM interactions with Opek's OpenAI integration.
+- `src/opik_and_foundry.py`: Script for tracking LLM interactions with Azure AI Foundry. Currently no Azure AI Foundry integration is available.
+- `src/opik_and_custom.py`: Contains functions to handle LLM interactions with Open AI without using the integration.
 
-To get started see [Development Environment Setup](./docs/dev-env-setup.md) and [Development Guide](./docs/DEVELOPMENT.md).
+Make sure to have the necessary dependencies installed and configured.
 
-_Modify this README.md file to describe your project._
+## Dependencies & Configuration
+
+Install the required dependencies by running:
+
+```bash
+pip install -r requirements.txt
+```
+
+If you are using the devcontainer, the dependencies are already installed.
+
+Copy the file `.env.example` to `.env` and fill in the required environment variables.
+
+The following accounts are required:
+
+- OpenAI account with API key
+- Comet account with API key
+- GitHub account with personal access token (PAT) for model access
