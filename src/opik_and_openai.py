@@ -5,14 +5,20 @@ It includes functions to retrieve context and generate a response using the Open
 
 import os
 from dotenv import load_dotenv
-from opik import track
+import opik
 from opik.integrations.openai import track_openai
 from openai import OpenAI
 
 # Load dotenv from DOT_ENV_FILE if it exists
 DOT_ENV_FILE = os.getenv("DOT_ENV_FILE", ".env")
 if os.path.exists(DOT_ENV_FILE):
-    load_dotenv(DOT_ENV_FILE)
+    load_dotenv(DOT_ENV_FILE, override=True)
+
+# Configure Comet Opik
+opik.configure(
+    api_key=os.getenv("COMET_API_KEY"),
+    workspace=os.getenv("OPIK_WORKSPACE"),
+)
 
 # Wrap your OpenAI client
 client = OpenAI()
@@ -20,20 +26,20 @@ client = track_openai(client)
 
 
 # Create your chain
-@track(name="openai_poc")
+@opik.track(name="openai_poc")
 def llm_chain(input_text):
     """
     Function to handle the LLM chain interaction.
     It retrieves context and generates a response based on the input text.
     """
     context = retrieve_context(input_text)
-    response = generate_response(input_text, context)
+    response = generate_response(input_text, context)  # type: ignore
 
     return response
 
 
-@track
-def retrieve_context(input_text):
+@opik.track
+def retrieve_context(_input_text):
     """
     Function to retrieve context based on the input text.
     This is a placeholder function that simulates context retrieval.
@@ -47,7 +53,7 @@ def retrieve_context(input_text):
     return context
 
 
-@track
+@opik.track
 def generate_response(input_text, context):
     """
     Function to generate a response using the OpenAI API.

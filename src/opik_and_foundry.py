@@ -6,7 +6,7 @@ This example demonstrates how to use the Azure AI Foundry LLM with Opik for trac
 import os
 from typing import List
 from dotenv import load_dotenv
-from opik import track
+import opik
 from azure.ai.inference import ChatCompletionsClient
 from azure.ai.inference.models import (
     ChatRequestMessage,
@@ -21,10 +21,18 @@ from azure.core.credentials import AzureKeyCredential
 # Load dotenv from DOT_ENV_FILE if it exists
 DOT_ENV_FILE = os.getenv("DOT_ENV_FILE", ".env")
 if os.path.exists(DOT_ENV_FILE):
-    load_dotenv(DOT_ENV_FILE)
+    load_dotenv(DOT_ENV_FILE, override=True)
 
-# To authenticate with the model you will need to generate a personal access token (PAT) in your GitHub settings.
-# Create your PAT token by following instructions here: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+# Configure Comet Opik
+opik.configure(
+    api_key=os.getenv("COMET_API_KEY"),
+    workspace=os.getenv("OPIK_WORKSPACE"),
+)
+
+# To authenticate with the model you will need to generate a
+# personal access token (PAT) in your GitHub settings.
+# Create your PAT token by following instructions here:
+# https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 client = ChatCompletionsClient(
     endpoint="https://models.github.ai/inference",
     credential=AzureKeyCredential(os.environ["GITHUB_TOKEN"]),
@@ -33,20 +41,20 @@ client = ChatCompletionsClient(
 
 
 # Create your chain
-@track(name="foundry_poc")
+@opik.track(name="foundry_poc")
 def llm_chain(input_text: str) -> str:
     """
     Function to handle the LLM chain interaction.
     It retrieves context and generates a response based on the input text.
     """
-    context = retrieve_context(input_text)
-    response = generate_response(input_text, context)
+    context = retrieve_context(input_text)  # type: ignore
+    response = generate_response(input_text, context)  # type: ignore
 
     return response
 
 
-@track
-def retrieve_context(input_text: str) -> List[str]:
+@opik.track
+def retrieve_context(_input_text: str) -> List[str]:
     """
     Function to retrieve context based on the input text.
     This is a placeholder function that simulates context retrieval.
@@ -60,7 +68,7 @@ def retrieve_context(input_text: str) -> List[str]:
     return context
 
 
-@track
+@opik.track
 def generate_response(input_text: str, context: List[str]):
     """
     Function to generate a response calling API.

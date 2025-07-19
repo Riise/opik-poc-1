@@ -11,10 +11,13 @@ from openai import OpenAI
 # Load dotenv from DOT_ENV_FILE if it exists
 DOT_ENV_FILE = os.getenv("DOT_ENV_FILE", ".env")
 if os.path.exists(DOT_ENV_FILE):
-    load_dotenv(DOT_ENV_FILE)
+    load_dotenv(DOT_ENV_FILE, override=True)
 
-# Configure Opik (this attaches Opik's tracing to the LLM call)
-opik.configure()
+# Configure Comet Opik
+opik.configure(
+    api_key=os.getenv("COMET_API_KEY"),
+    workspace=os.getenv("OPIK_WORKSPACE"),
+)
 
 
 # The Opik decorator `@opik.track` will automatically trace this function call.
