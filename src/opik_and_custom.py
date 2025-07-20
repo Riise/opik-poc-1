@@ -69,7 +69,6 @@ def ask_llm(prompt: str, temperature: float = 0.5):
 def multiple_calls(recurring_prompt: str):
     """
     Function to demonstrate multiple calls to the LLM.
-    This is useful for testing and ensuring that the tracing works correctly.
     """
     responses = []
     temperatures = [0.0, 1.0, 2.0]  # Different temperatures for variety
