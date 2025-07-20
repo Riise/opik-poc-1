@@ -3,3 +3,4 @@ opik
 azure-ai-inference
 openai
 langchain[openai]
+langgraph
