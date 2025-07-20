@@ -35,22 +35,13 @@ def ask_llm(prompt: str, temperature: float = 0.5):
         temperature=temperature,
     )
 
-    usage = None
-    if response.usage is not None:
-        usage = {
-            "prompt_tokens": response.usage.prompt_tokens,
-            "completion_tokens": response.usage.completion_tokens,
-            "total_tokens": response.usage.total_tokens,
-        }
-
     opik_context.update_current_span(
         provider="openai",
         model=MODEL,
         metadata={
-            "prompt_tokens": response.usage.prompt_tokens if response.usage else None,
             "temperature": temperature,
         },
-        usage=usage,
+        usage=response.usage.to_dict() if response.usage else None,
     )
 
     return response.choices[0].message.content

@@ -48,17 +48,9 @@ def ask_llm(prompt: str, temperature: float, trace: opik.Trace):
             temperature=temperature,
         )
 
-        usage = None
-        if response.usage is not None:
-            usage = {
-                "prompt_tokens": response.usage.prompt_tokens,
-                "completion_tokens": response.usage.completion_tokens,
-                "total_tokens": response.usage.total_tokens,
-            }
-
         span.update(
             output={"response": response.choices[0].message.content},
-            usage=usage,
+            usage=response.usage.to_dict() if response.usage else None,
         )
 
     finally:
