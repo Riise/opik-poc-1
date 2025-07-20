@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import opik
 from openai import OpenAI
 
+MAX_TOKENS = 200
 MODEL = "gpt-3.5-turbo"
 
 # Load dotenv from DOT_ENV_FILE if it exists
@@ -38,6 +39,7 @@ def ask_llm(prompt: str, temperature: float, trace: opik.Trace):
         model=MODEL,
         metadata={
             "temperature": temperature,
+            "max_tokens": MAX_TOKENS,
         },
     )
 
@@ -46,6 +48,7 @@ def ask_llm(prompt: str, temperature: float, trace: opik.Trace):
             model=MODEL,
             messages=[{"role": "user", "content": prompt}],
             temperature=temperature,
+            max_tokens=MAX_TOKENS,
         )
 
         span.update(
@@ -54,7 +57,7 @@ def ask_llm(prompt: str, temperature: float, trace: opik.Trace):
         )
 
     finally:
-        span.end()
+        span.end()  # Set end time for the span
 
     return response.choices[0].message.content
 
