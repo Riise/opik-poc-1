@@ -53,13 +53,16 @@ def retrieve_context(_input_text):
     return context
 
 
+# The Opik decorator `@opik.track` will automatically trace this function call
+# (optional as track_openai() is tracing more detailed LLM interaction).
 @opik.track
 def generate_response(input_text, context):
     """
     Function to generate a response using the OpenAI API.
     """
     full_prompt = (
-        f" If the user asks a question that is not specific, use the context to provide a relevant response.\n"
+        f" If the user asks a question that is not specific, "
+        f"use the context to provide a relevant response.\n"
         f"Context: {', '.join(context)}\n"
         f"User: {input_text}\n"
         f"AI:"
